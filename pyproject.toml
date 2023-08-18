@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "pokestream"
+version = "0.1.0"
+description = ""
+authors = ["Elias Tavarez <etav@umich.edu>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+streamlit = "^1.25.0"
+pandas = "^2.0.3"
+scikit-learn = "^1.3.0"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.3.3"
+ruff = "^0.0.285"
+pytest = "^7.4.0"
+black = "^23.7.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
