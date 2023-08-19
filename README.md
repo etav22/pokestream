@@ -25,3 +25,11 @@ Or, if you have [make](https://www.gnu.org/software/make/manual/make.html#Overvi
 make run
 ```
 
+## Data
+To donwnload the data, you can run the following command:
+```bash
+make data
+```
+This command will create a `data` directory and download the `PokemonStats.csv` file into that directory.
+
+You will have to make sure that you have a kaggle API key setup on your machine. You can find instructions on how to do that [here](https://www.kaggle.com/docs/api)
