@@ -1,7 +1,11 @@
-run: 
+install:
+	poetry install
+	poetry run pre-commit install
+
+run:
 	poetry run streamlit run app.py
 
-test: 
+test:
 	poetry run pytest
 
 data:
