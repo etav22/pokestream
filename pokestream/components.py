@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 import pandas as pd
 import plotly.figure_factory as ff
 import plotly.graph_objects as go
@@ -48,7 +50,7 @@ POKECOLOR = {
 
 def create_histogram(
     df_pokemon: pd.DataFrame,
-    pokemon_stats: dict,
+    pokemon_stats: Dict[str, Any],
     stat: str,
     bin_size: int = 10,
 ) -> go.Histogram | None:
@@ -84,6 +86,62 @@ def create_histogram(
         line_dash="dot",
         line_color="red",
         annotation={"text": "Current Pokemon", "font": {"color": "red"}},
+    )
+
+    return fig
+
+
+def create_scatter_compare(
+    df_pokemon: pd.DataFrame,
+    pokemon_stats: Dict[str, Any],
+    stat_1: str,
+    stat_2: str,
+) -> go.Figure | None:
+    """Create a scatterplot comparing two of the pokemon's stats.
+
+    Args:
+    ----
+        df_pokemon (pd.DataFrame): Entire pokemon dataset.
+        pokemon_stats (dict): Stats of the selected pokemon.
+        stat_1 (str): First stat to compare.
+        stat_2 (str): Second stat to compare.
+
+    Returns:
+    -------
+        go.Figure | None: Plotly scatterplot.
+    """
+    if (stat_1 not in df_pokemon.columns) or (stat_2 not in df_pokemon.columns):
+        st.error(f"{stat_1} or {stat_2} not found in dataset.")
+        return None
+
+    fig = go.Figure()
+
+    # Create scatterplot of all pokemon
+    fig.add_trace(
+        go.Scatter(
+            x=df_pokemon[stat_1],
+            y=df_pokemon[stat_2],
+            mode="markers",
+            marker={"color": POKECOLOR[pokemon_stats["Type1"]]},
+            name="All Pokemon",
+            hovertemplate=df_pokemon["Name"],
+        ),
+    )
+    # Create point for current pokemon
+    fig.add_trace(
+        go.Scatter(
+            x=[pokemon_stats[stat_1]],
+            y=[pokemon_stats[stat_2]],
+            mode="markers",
+            marker={"color": "red"},
+            name="Current Pokemon",
+        ),
+    )
+
+    fig.update_layout(
+        title=f"{stat_1} vs {stat_2}",
+        xaxis_title=f"{stat_1}",
+        yaxis_title=f"{stat_2}",
     )
 
     return fig

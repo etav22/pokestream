@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 
-from pokestream.components import POKEMOJI, create_histogram
+from pokestream.components import POKEMOJI, create_histogram, create_scatter_compare
 from pokestream.core import get_pokemon
 
 # Read in the original datset
@@ -19,7 +19,7 @@ if pokemon_json:
     pokemon_stats = pokemon_choose_df.to_dict("records")[0]
 
     # Header takes on the value of the selectbox
-    st.header(pokemon)
+    st.markdown(f"# {pokemon}")
     st.sidebar.image(pokemon_json["sprites"]["front_default"], width=300)
 
     # Write out the pokemon's type
@@ -50,15 +50,20 @@ if pokemon_json:
     st.write("*Delta is compared to average of all pokemon*")
     st.write("---")
 
-    # Create plotly distribution graph
-    fig_dict = {}
-    for stat in display_stats:
-        fig_dict[stat] = create_histogram(df_pokemon, pokemon_stats, stat)
+    st.markdown("## Plots")
 
-    # Create plotly scatter plots
+    # Create plotly distribution plots
     chosen_stat = st.selectbox("Stat", display_stats, index=0)
     bin_step = st.slider("Bin Range", min_value=1, max_value=50, value=10, step=1)
     stat_fig = create_histogram(df_pokemon, pokemon_stats, chosen_stat, bin_size=bin_step)
     st.plotly_chart(stat_fig, use_container_width=True)
+
+    # Create scatterplot
+    c1, c2 = st.columns(2)
+    stat_1 = c1.selectbox("Stat 1", display_stats, index=0)
+    stat_2 = c2.selectbox("Stat 2", display_stats, index=1)
+    scatter_fig = create_scatter_compare(df_pokemon, pokemon_stats, stat_1, stat_2)
+    st.plotly_chart(scatter_fig, use_container_width=True)
+
 else:
     st.error("Pokemon not found.")
