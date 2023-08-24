@@ -36,5 +36,7 @@ ignore = [
 	"FA102",
 	"D417",
 	"D400",
-	"D100"
+	"D100",
+	"S101"
 ]
+extend-exclude = ["tests"]

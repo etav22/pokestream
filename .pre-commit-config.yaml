@@ -25,4 +25,4 @@ repos:
         require_serial: true
         language: system
         types: [python]
-        args: [--fix]
+        args: [--fix, --force-exclude]
