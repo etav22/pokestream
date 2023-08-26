@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import pandas as pd
 import plotly.figure_factory as ff
@@ -142,6 +142,34 @@ def create_scatter_compare(
         title=f"{stat_1} vs {stat_2}",
         xaxis_title=f"{stat_1}",
         yaxis_title=f"{stat_2}",
+    )
+
+    return fig
+
+
+def create_scatter_polar(pokemon_stats: Dict[str, Any], display_stats: List[str]) -> go.Figure:
+    """Create a polar scatterplot of the pokemon's stats.
+
+    Args:
+    ----
+        pokemon_stats (Dict[str, Any]): Selected pokemon's stats.
+        display_stats (List[str]): List of stats to display.
+
+    Returns:
+    -------
+        go.Figure: Polar scatterplot.
+    """
+    fig = go.Figure()
+
+    fig.add_trace(
+        go.Scatterpolar(
+            cliponaxis=True,
+            r=[pokemon_stats[stat] for stat in display_stats if stat != "Total"],
+            theta=[stat for stat in display_stats if stat != "Total"],
+            fill="toself",
+            marker={"size": 10, "color": POKECOLOR[pokemon_stats["Type1"]]},
+            line={"color": POKECOLOR[pokemon_stats["Type1"]], "width": 2},
+        ),
     )
 
     return fig

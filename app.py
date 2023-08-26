@@ -1,13 +1,14 @@
 import pandas as pd
 import streamlit as st
 
-from pokestream.components import POKEMOJI, create_histogram, create_scatter_compare
+import pokestream.components as pc
 from pokestream.core import get_pokemon
 
 # Read in the original datset
 df_pokemon = pd.read_csv("./data/PokemonStats.csv", index_col=0)
 
 # Add a selectbox to the sidebar:
+st.sidebar.markdown("# Gotta Catch 'Em All!")
 pokemon: str = st.sidebar.selectbox("Choose your pokemon!", df_pokemon["Name"].unique())
 
 # Query the API for the selected pokemon
@@ -18,26 +19,33 @@ if pokemon_json:
     pokemon_choose_df = df_pokemon[df_pokemon["Name"] == pokemon]
     pokemon_stats = pokemon_choose_df.to_dict("records")[0]
 
-    # Header takes on the value of the selectbox
-    st.markdown(f"# {pokemon}")
-    st.sidebar.image(pokemon_json["sprites"]["front_default"], width=300)
+    # Sidebar
+    with st.sidebar:
+        # Pokemon's Sprite
+        sprite = st.radio("Pokemon Sprite", ["Base", "Shiny"], index=0)
+        if sprite == "Base":
+            st.image(pokemon_json["sprites"]["front_default"], width=300)
+        else:
+            st.image(pokemon_json["sprites"]["front_shiny"], width=300)
 
-    # Write out the pokemon's type
-    type_1 = POKEMOJI[pokemon_stats["Type1"]]
-    st.sidebar.markdown("---")
-    st.sidebar.markdown(
-        f"<h2 style='text-align: center';'>Type: {type_1} {pokemon_stats['Type1']} </h2>",
-        unsafe_allow_html=True,
-    )
-    try:
-        type_2 = POKEMOJI[pokemon_stats["Type2"]]
+        # Write out the pokemon's type
+        type_1 = pc.POKEMOJI[pokemon_stats["Type1"]]
+        st.sidebar.markdown("---")
         st.sidebar.markdown(
-            f"<h2 style='text-align: center';'>Type 2: {type_2} {pokemon_stats['Type2']} </h2>",
+            f"<h2 style='text-align: center';'>Type: {type_1} {pokemon_stats['Type1']} </h2>",
             unsafe_allow_html=True,
         )
-    except KeyError:
-        pass
+        try:
+            type_2 = pc.POKEMOJI[pokemon_stats["Type2"]]
+            st.sidebar.markdown(
+                f"<h2 style='text-align: center';'>Type 2: {type_2} {pokemon_stats['Type2']} </h2>",
+                unsafe_allow_html=True,
+            )
+        except KeyError:
+            pass
 
+    # Main page
+    st.markdown(f"# {pokemon}")
     st.write(f"Here are some stats on {pokemon}!")
 
     # Display the pokemon's stats
@@ -48,22 +56,26 @@ if pokemon_json:
         delta = int(pokemon_stats[stat] - df_pokemon[stat].mean())
         cols[i].metric(label=stat, value=pokemon_stats[stat], delta=delta)
     st.write("*Delta is compared to average of all pokemon*")
+
+    # Create plotly polar plot
+    scatterpolar = pc.create_scatter_polar(pokemon_stats, display_stats)
+    st.plotly_chart(scatterpolar, use_container_width=True)
+
     st.write("---")
 
-    st.markdown("## Plots")
+    st.markdown("### Compare to other pokemon!")
 
     # Create plotly distribution plots
     chosen_stat = st.selectbox("Stat", display_stats, index=0)
     bin_step = st.slider("Bin Range", min_value=1, max_value=50, value=10, step=1)
-    stat_fig = create_histogram(df_pokemon, pokemon_stats, chosen_stat, bin_size=bin_step)
+    stat_fig = pc.create_histogram(df_pokemon, pokemon_stats, chosen_stat, bin_size=bin_step)
     st.plotly_chart(stat_fig, use_container_width=True)
 
     # Create scatterplot
     c1, c2 = st.columns(2)
     stat_1 = c1.selectbox("Stat 1", display_stats, index=0)
     stat_2 = c2.selectbox("Stat 2", display_stats, index=1)
-    scatter_fig = create_scatter_compare(df_pokemon, pokemon_stats, stat_1, stat_2)
+    scatter_fig = pc.create_scatter_compare(df_pokemon, pokemon_stats, stat_1, stat_2)
     st.plotly_chart(scatter_fig, use_container_width=True)
-
 else:
     st.error("Pokemon not found.")
