@@ -173,3 +173,35 @@ def create_scatter_polar(pokemon_stats: Dict[str, Any], display_stats: List[str]
     )
 
     return fig
+
+
+def create_violin_plot(df_pokemon: pd.DataFrame, stat: str) -> None:
+    """Create a violin plot of the given stat across all pokemon types.
+
+    Args:
+    ----
+        df_pokemon (pd.DataFrame): Dataset of all pokemon.
+        stat (str): Stat to create violin plot of.
+    """
+    fig = go.Figure()
+
+    for poke_type in list(df_pokemon["Type1"].unique()):
+        fig.add_trace(
+            go.Violin(
+                x=df_pokemon["Type1"][df_pokemon["Type1"] == poke_type],
+                y=df_pokemon[stat][df_pokemon["Type1"] == poke_type],
+                name=type,
+                line_color=POKECOLOR[type],
+                box_visible=True,
+                meanline_visible=True,
+                hovertext=df_pokemon["Name"][df_pokemon["Type1"] == poke_type],
+            ),
+        )
+
+    fig.update_layout(
+        title=f"{stat} Across Types",
+        xaxis_title="Type",
+        yaxis_title="Value",
+    )
+
+    return fig

@@ -1766,6 +1766,21 @@ files = [
 ]
 
 [[package]]
+name = "st-pages"
+version = "0.4.4"
+description = "An experimental version of Streamlit Multi-Page Apps"
+category = "main"
+optional = false
+python-versions = ">=3.8, !=2.7.*, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, !=3.6.*, !=3.7.*"
+files = [
+    {file = "st_pages-0.4.4-py3-none-any.whl", hash = "sha256:903850629c28ad2d5ccc40587ec63c543482ad4329fbeaf124920e1409a097da"},
+    {file = "st_pages-0.4.4.tar.gz", hash = "sha256:fa2fa98a2c9fef88978fcbddc4de1ef5ae0a4d73e8b567edea4da033b13a2abe"},
+]
+
+[package.dependencies]
+streamlit = ">=1.10.0"
+
+[[package]]
 name = "streamlit"
 version = "1.25.0"
 description = "A faster way to build and share data apps"
@@ -2113,4 +2128,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "40f1c69cba14101408db368c5eda0a73a7878948e4226dda0723b838275408f3"
+content-hash = "30d628ba4975eaabffc523d0f845d8be8bb43a3ba2faf1e761fd2afcc5042cc5"

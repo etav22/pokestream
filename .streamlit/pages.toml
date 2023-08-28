@@ -1,0 +1,11 @@
+[[pages]]
+path = "app.py"
+name = "Pokedex"
+
+[[pages]]
+path = "pages/types.py"
+name = "Pokemon Types"
+
+[[pages]]
+path = "pages/generations.py"
+name = "Pokemon Generations"
