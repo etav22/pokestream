@@ -1,8 +1,12 @@
+"""Main page that displays the pokedex information for a selected pokemon."""
 import pandas as pd
 import streamlit as st
+from st_pages import show_pages_from_config
 
 import pokestream.components as pc
 from pokestream.core import get_pokemon
+
+show_pages_from_config()
 
 # Read in the original datset
 df_pokemon = pd.read_csv("./data/PokemonStats.csv", index_col=0)
@@ -19,7 +23,7 @@ if pokemon_json:
     pokemon_choose_df = df_pokemon[df_pokemon["Name"] == pokemon]
     pokemon_stats = pokemon_choose_df.to_dict("records")[0]
 
-    # Sidebar
+    # ==== Sidebar ====
     with st.sidebar:
         # Pokemon's Sprite
         sprite = st.radio("Pokemon Sprite", ["Base", "Shiny"], index=0)
@@ -28,25 +32,11 @@ if pokemon_json:
         else:
             st.image(pokemon_json["sprites"]["front_shiny"], width=300)
 
-        # Write out the pokemon's type
-        type_1 = pc.POKEMOJI[pokemon_stats["Type1"]]
-        st.sidebar.markdown("---")
-        st.sidebar.markdown(
-            f"<h2 style='text-align: center';'>Type: {type_1} {pokemon_stats['Type1']} </h2>",
-            unsafe_allow_html=True,
-        )
-        try:
-            type_2 = pc.POKEMOJI[pokemon_stats["Type2"]]
-            st.sidebar.markdown(
-                f"<h2 style='text-align: center';'>Type 2: {type_2} {pokemon_stats['Type2']} </h2>",
-                unsafe_allow_html=True,
-            )
-        except KeyError:
-            pass
-
-    # Main page
-    st.markdown(f"# {pokemon}")
+    # ==== Main page ====
+    st.markdown(f"# {pokemon} {pc.POKEMOJI[pokemon_stats['Type1']]}")
     st.write(f"Here are some stats on {pokemon}!")
+
+    #! Need to add more general descriptors of pokemon (e.g. both types, height, weight, evolutions etc.)
 
     # Display the pokemon's stats
     c1, c2, c3, c4, c5, c6, c7 = st.columns(7)
@@ -61,8 +51,8 @@ if pokemon_json:
     scatterpolar = pc.create_scatter_polar(pokemon_stats, display_stats)
     st.plotly_chart(scatterpolar, use_container_width=True)
 
+    # ==== Comparison page ====
     st.write("---")
-
     st.markdown("### Compare to other pokemon!")
 
     # Create plotly distribution plots
