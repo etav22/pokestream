@@ -190,8 +190,8 @@ def create_violin_plot(df_pokemon: pd.DataFrame, stat: str) -> None:
             go.Violin(
                 x=df_pokemon["Type1"][df_pokemon["Type1"] == poke_type],
                 y=df_pokemon[stat][df_pokemon["Type1"] == poke_type],
-                name=type,
-                line_color=POKECOLOR[type],
+                name=poke_type,
+                line_color=POKECOLOR[poke_type],
                 box_visible=True,
                 meanline_visible=True,
                 hovertext=df_pokemon["Name"][df_pokemon["Type1"] == poke_type],
