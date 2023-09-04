@@ -1,0 +1,79 @@
+name: CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - main  # Replace with the branch you want to trigger the workflow on
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.10]
+        poetry-version: [1.5]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python {{ matrix.python-version }}}
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.10
+
+      - name: Setup Poetry {{ matrix.poetry-version }}}
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: ${{ matrix.poetry-version }}
+
+      - name: Install dev dependencies
+        run: |
+          poetry install --only dev
+
+      - name: Run Black
+        run: |
+          poetry run black --check --verbose .
+
+      - name: Run Ruff
+        run: |
+          poetry run ruff check .
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.10]
+        poetry-version: [1.5]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python {{ matrix.python-version }}}
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.10
+
+      - name: Setup Poetry {{ matrix.poetry-version }}}
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: ${{ matrix.poetry-version }}
+
+      - name: Install dev dependencies
+        run: |
+          poetry install
+
+      - name: Run Pytest
+        run: |
+          poetry run pytest
+
+
+
+  # build:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Build Docker image
+  #       run: |
+  #         docker build -t pokestream:latest .
