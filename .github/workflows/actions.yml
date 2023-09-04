@@ -9,7 +9,6 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
-    strategy:
 
     steps:
       - name: Checkout code
