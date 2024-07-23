@@ -56,13 +56,3 @@ jobs:
       - name: Run Pytest
         run: |
           poetry run pytest
-
-
-
-  # build:
-  #   needs: lint
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Build Docker image
-  #       run: |
-  #         docker build -t pokestream:latest .
